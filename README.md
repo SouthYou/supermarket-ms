@@ -17,10 +17,10 @@
 
 ```bash
 # 克隆项目
-git clone https://github.com/Youjianan/HEMS.git
+git clone https://github.com/Youjianan/supermarket-ms.git
 
 # 进入项目目录
-cd HEMS
+cd supermarket-ms
 
 # 安装依赖
 npm install
