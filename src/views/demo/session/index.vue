@@ -110,7 +110,7 @@
 
 <script>
 import SessionCard from '@/components/SessionCard'
-import * as api from '@/api/edu/session'
+import * as api from '@/api/demo/session'
 
 export default {
   inject: ['reload'],

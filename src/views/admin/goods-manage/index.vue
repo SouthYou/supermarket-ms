@@ -3,7 +3,7 @@
     <!-- 标签 -->
     <div class="operate-container">
       <el-card shadow="never">
-        <i class="el-icon-tickets"></i> 新闻列表
+        <i class="el-icon-tickets"></i> 商品列表
         <el-button class="btn-add" type="success" size="small" @click="showAddDialog()">添加</el-button>
       </el-card>
     </div>
@@ -16,13 +16,37 @@
             <el-image style="width: 80px; height: 80px" :src="scope.row.coverImg"></el-image>
           </template>
         </el-table-column> -->
-        <el-table-column prop="title" label="标题" width="200"></el-table-column>
-        <el-table-column prop="content" label="内容" show-overflow-tooltip></el-table-column>
-        <el-table-column prop="publishDate" label="发布时间" width="200"></el-table-column>
+        <el-table-column prop="goodsId" label="商品编号"></el-table-column>
+        <el-table-column prop="goodsName" label="商品名称"></el-table-column>
+        <el-table-column prop="goodsType" label="商品类型"></el-table-column>
+        <el-table-column prop="goodsCost" label="商品进货价"></el-table-column>
+        <el-table-column prop="goodsPrice" label="商品销售价">
+          <template slot-scope="scope">
+            <span v-if="scope.row.isEditPropertyShow">
+              <el-input v-model="scope.row.goodsPrice" size="small" placeholder="请输入内容" />
+            </span>
+            <span v-else>{{ scope.row.goodsPrice }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="stock" label="库存">
+          <template slot-scope="scope">
+            <span v-if="scope.row.isEditPropertyShow">
+              <el-input v-model="scope.row.stock" size="small" placeholder="请输入内容" />
+            </span>
+            <span v-else>{{ scope.row.stock }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="productionDate" label="生产日期"></el-table-column>
+        <el-table-column prop="duration" label="保质期"></el-table-column>
+        <el-table-column prop="expirationDate" label="过期时间"></el-table-column>
         <el-table-column label="操作" width="150">
           <template slot-scope="scope">
-            <el-button type="primary" size="small" @click="showEditDialog(scope.row)">编辑</el-button>
-            <el-button type="danger" size="small" @click="handleNewsRemove(scope.row.newsId)">删除</el-button>
+            <el-button v-if="!scope.row.isEditPropertyShow" type="primary" size="small" @click="editProperty(scope.row,scope.$index)">编辑</el-button>
+            <div v-else>
+              <el-button type="primary" plain size="small" @click="saveProperty(scope.row,scope.$index)">保存</el-button>
+              <el-button size="small" @click="cancelProperty(scope.row,scope.$index)">取消</el-button>
+            </div>
+            <!-- <el-button type="danger" size="small" @click="handleNewsRemove(scope.row.newsId)">删除</el-button> -->
           </template>
         </el-table-column>
       </el-table>
@@ -86,7 +110,8 @@
 </template>
 
 <script>
-import * as api from '@/api/admin/news'
+import * as api from '@/api/demo/news'
+import * as trueApi from '@/api/admin/goods-manage'
 
 export default {
   inject: ['reload'],
@@ -116,7 +141,7 @@ export default {
   created() {
     const pageSize = this.pageSize
     const params = { pageSize }
-    api.getNews(params).then(res => {
+    trueApi.getGoods(params).then(res => {
       const { data } = res
       this.total = data.total
       this.tableData = data.tableData
@@ -125,6 +150,36 @@ export default {
   },
 
   methods: {
+    // 修改商品属性
+    editProperty(row, index) {
+      sessionStorage.setItem('oldPropertyValue', JSON.stringify(row))
+      // this.$set(obj, key, value)
+      this.$set(this.showData[index], 'isEditPropertyShow', true)
+    },
+
+    // 保存商品属性
+    saveProperty(row, index) {
+      sessionStorage.removeItem('oldPropertyValue')
+      this.$set(this.showData[index], 'isEditPropertyShow', false)
+      // TODO 更新后数据发送给后端
+    },
+
+    // 取消商品属性编辑
+    cancelProperty(row, index) {
+      let oldPropertyValue = sessionStorage.getItem('oldPropertyValue')
+      if (sessionStorage.getItem('oldPropertyValue') !== 'null') {
+        let oldPropertyValue_json = JSON.parse(oldPropertyValue)
+        this.$set(this.showData[index], 'goodsPrice', oldPropertyValue_json.goodsPrice)
+        this.$set(this.showData[index], 'stock', oldPropertyValue_json.stock)
+      } else {
+        console.error('sessionStorage未正常设置')
+      }
+      sessionStorage.removeItem('oldPropertyValue')
+      this.$set(this.showData[index], 'isEditPropertyShow', false)
+    },
+    ////////////////////////////////////////////////////////
+    ///////////////////以下为历史项目遗留////////////////////
+    ////////////////////////////////////////////////////////
     /**
      * @method 弹出添加dialog
      */

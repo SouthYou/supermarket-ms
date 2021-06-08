@@ -146,7 +146,7 @@
 
 <script>
 import { parseTime } from '@/utils/index'
-import * as api from '@/api/admin/exam'
+import * as api from '@/api/demo/exam'
 
 export default {
   inject: ['reload'],

@@ -105,7 +105,7 @@
 </template>
 
 <script>
-import * as api from '@/api/edu/enroll'
+import * as api from '@/api/demo/enroll'
 
 export default {
   inject: ['reload'],

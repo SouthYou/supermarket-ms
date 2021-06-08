@@ -93,7 +93,7 @@
 </template>
 
 <script>
-import * as api from '@/api/edu/site'
+import * as api from '@/api/demo/site'
 
 export default {
   // inject: ['reload'],

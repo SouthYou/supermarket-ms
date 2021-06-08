@@ -59,7 +59,7 @@
 </template>
 
 <script>
-import * as api from '@/api/edu/apply'
+import * as api from '@/api/demo/apply'
 
 export default {
   inject: ['reload'],

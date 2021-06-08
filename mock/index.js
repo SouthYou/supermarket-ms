@@ -2,21 +2,23 @@ const Mock = require('mockjs')
 const { param2Obj } = require('./utils')
 
 const user = require('./common/user')
+const goods_manage = require('./admin/goods-manage')
 
-const news = require('./admin/news')
-const exam = require('./admin/exam')
-
-const status = require('./edu/status')
-const enroll = require('./edu/enroll')
-const apply = require('./edu/apply')
-const session = require('./edu/session')
-const site = require('./edu/site')
-const score = require('./edu/score')
-const invigilator = require('./edu/invigilator')
-const arrange = require('./edu/arrange')
+const news = require('./demo/news')
+const exam = require('./demo/exam')
+const status = require('./demo/status')
+const enroll = require('./demo/enroll')
+const apply = require('./demo/apply')
+const session = require('./demo/session')
+const site = require('./demo/site')
+const score = require('./demo/score')
+const invigilator = require('./demo/invigilator')
+const arrange = require('./demo/arrange')
 
 const mocks = [
   ...user,
+  ...goods_manage,
+
   ...news,
   ...exam,
   ...status,

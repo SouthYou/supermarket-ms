@@ -62,7 +62,7 @@
 </template>
 
 <script>
-import * as api from '@/api/edu/invigilator'
+import * as api from '@/api/demo/invigilator'
 
 export default {
   inject: ['reload'],

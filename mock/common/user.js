@@ -1,30 +1,14 @@
 const tokens = {
   admin: {
     token: 'admin-token'
-  },
-  eduAdmin: {
-    token: 'eduAdmin-token'
   }
 }
 
 const users = {
   'admin-token': {
-    roles: [
-      {
-        "roleName": "ROLE_SYSTEM_ADMIN"
-      }
-    ],
-    avatar: 'https://cdn.jsdelivr.net/gh/SouthYou/supermarket-ms/scr/assets/logo/logo.png',
+    roles: 'ROLE_ADMIN',
+    avatar: 'https://cdn.jsdelivr.net/gh/southyou/supermarket-ms/src/assets/logo/logo.png',
     accountName: '系统管理员'
-  },
-  'eduAdmin-token': {
-    roles: [
-      {
-        "roleName": "ROLE_EDU_ADMIN"
-      }
-    ],
-    avatar: 'https://cdn.jsdelivr.net/gh/SouthYou/supermarket-ms/scr/assets/logo/logo.png',
-    accountName: '教务'
   }
 }
 

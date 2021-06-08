@@ -65,8 +65,8 @@
 </template>
 
 <script>
-import * as api from '@/api/edu/status'
-import { generateArrange } from '@/api/edu/arrange'
+import * as api from '@/api/demo/status'
+import { generateArrange } from '@/api/demo/arrange'
 
 export default {
   inject: ['reload'],

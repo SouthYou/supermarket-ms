@@ -23,7 +23,7 @@
 </template>
 
 <script>
-import * as api from '@/api/edu/score'
+import * as api from '@/api/demo/score'
 
 export default {
   data() {

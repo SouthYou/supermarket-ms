@@ -107,9 +107,9 @@
 </template>
 
 <script>
-import * as api from '@/api/edu/arrange'
-import { getExamName } from '@/api/admin/exam'
-import { getSiteByExamName } from '@/api/edu/site'
+import * as api from '@/api/demo/arrange'
+import { getExamName } from '@/api/demo/exam'
+import { getSiteByExamName } from '@/api/demo/site'
 
 export default {
   data() {
