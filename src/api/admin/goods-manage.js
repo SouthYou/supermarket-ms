@@ -8,3 +8,18 @@ export function getGoods(params) {
   })
 }
 
+export function addGoods(data) {
+  return request({
+    url: '/goods/add',
+    method: 'post',
+    data
+  })
+}
+
+export function modifyGoods(data) {
+  return request({
+    url: '/goods/modify',
+    method: 'post',
+    data
+  })
+}

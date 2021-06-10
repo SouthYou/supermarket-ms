@@ -69,5 +69,16 @@ module.exports = [
         )
       }
     }
-  }
+  },
+
+  {
+    url: '/goods/modify',
+    type: 'post',
+    response: config => {
+      return {
+        code: 20000,
+        data: 'mock success'
+      }
+    }
+  },
 ]

@@ -5,7 +5,7 @@ import { getToken } from '@/utils/auth'
 
 const service = axios.create({
   baseURL: process.env.VUE_APP_BASE_API,
-  // withCredentials: true, // send cookies when cross-domain requests
+  withCredentials: true, // send cookies when cross-domain requests
   timeout: 20000
 })
 
@@ -32,17 +32,17 @@ service.interceptors.response.use(
         duration: 5 * 1000
       })
 
-      if (res.code === 40003 || res.code === 50012 || res.code === 50014) {
-        MessageBox.confirm('您已经登出，是否重新登录 o(≧口≦)o', {
-          confirmButtonText: '重新登录',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          store.dispatch('user/resetToken').then(() => {
-            location.reload()
-          })
-        })
-      }
+      // if (res.code === 40003 || res.code === 50012 || res.code === 50014) {
+      //   MessageBox.confirm('您已经登出，是否重新登录 o(≧口≦)o', {
+      //     confirmButtonText: '重新登录',
+      //     cancelButtonText: '取消',
+      //     type: 'warning'
+      //   }).then(() => {
+      //     store.dispatch('user/resetToken').then(() => {
+      //       location.reload()
+      //     })
+      //   })
+      // }
       return Promise.reject(new Error(res.message || 'Error'))
     }
     return res
