@@ -158,6 +158,9 @@ export default {
   },
 
   created() {
+    // TODO 生产日期不能晚于当天
+    // TODO 保质期传给后端之前乘30
+    // TODO 实现/goods/import和/goods/base/add接口
     const pageSize = this.pageSize
     const params = { pageSize }
     api.getGoods(params).then(res => {
