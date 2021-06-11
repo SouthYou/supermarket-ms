@@ -38,7 +38,7 @@
           <template slot-scope="scope">
             <div v-if="!scope.row.isEditPropertyShow">
               <el-button type="primary" size="small" @click="editProperty(scope.row,scope.$index)">编辑</el-button>
-              <el-button type="warning" size="small" @click="showSellFormDialog()">销售</el-button>
+              <el-button type="warning" size="small" @click="showSellFormDialog(scope.row)">销售</el-button>
             </div>
             <div v-else>
               <el-button type="primary" plain size="small" @click="saveProperty(scope.row,scope.$index)">保存</el-button>
@@ -108,6 +108,9 @@
     <!-- 销售商品dialog -->
     <el-dialog title="销售商品" :visible.sync="sellFormDialogVisible" width="550px" :before-close="closeSellFormDialog">
       <el-form :model="sellForm" label-position="left" label-width="100px" ref="sellForm">
+        <el-form-item label="商品名称" prop="goodsName">
+          <el-input v-model="sellForm.goodsName" disabled style="width:350px"></el-input>
+        </el-form-item>
         <el-form-item label="销售数量" prop="goodsNum">
           <el-input-number v-model="sellForm.goodsNum" :min="1"></el-input-number>
         </el-form-item>
@@ -142,6 +145,7 @@ export default {
       // 表单dialog (销售商品)--------------------------------------------
       sellFormDialogVisible: false,
       sellForm: {
+        goodsName: '',
         goodsNum: 1
       },
       // 商品列表 (表格分页)------------------------------------------------
@@ -170,8 +174,7 @@ export default {
      */
     editProperty(row, index) {
       sessionStorage.setItem('oldPropertyValue', JSON.stringify(row))
-      // this.$set(obj, key, value)
-      this.$set(this.showData[index], 'isEditPropertyShow', true)
+      this.$set(this.showData[index], 'isEditPropertyShow', true)         // this.$set(obj, key, value)
     },
 
     /**
@@ -239,7 +242,12 @@ export default {
     /**
      * @method 弹出销售商品dialog
      */
-    showSellFormDialog() {
+    showSellFormDialog(row) {
+      // 在表单显示选中的商品名称
+      this.sellForm.goodsName = row.goodsName
+      // 将选中的 goodsId 保存至 sessionStorage
+      const selectedGoodsId = row.goodsId
+      sessionStorage.setItem("selectedGoodsId", selectedGoodsId)
       this.sellFormDialogVisible = true
     },
 
@@ -247,6 +255,8 @@ export default {
      * @method 关闭销售商品dialog
      */
     closeSellFormDialog() {
+      // 将选中的 goodsId 从 sessionStorage 里删除
+      sessionStorage.removeItem("selectedGoodsId")
       this.sellFormDialogVisible = false
     },
 
@@ -254,16 +264,18 @@ export default {
      * @method 提交销售商品dialog内的表单信息
      */
     submitSellFormDialog() {
-      const data = this.sellForm
-      // api.addGoods(data).then(res => {
-      //   const { data } = res
-      //   for (const key in this.addForm) {
-      //     this.addForm[key] = ''
-      //   }
-      //   this.handleCancel()
-      //   this.reload()
-      //   this.$message.success('添加成功')
-      // })
+      const goodsId = sessionStorage.getItem("selectedGoodsId")
+      const goodsNum = this.sellForm.goodsNum
+      const data = { goodsId, goodsNum }
+      api.sellGoods(data).then(res => {
+        const { data } = res
+        for (const key in this.sellForm) {
+          this.sellForm[key] = ''
+        }
+        this.closeSellFormDialog()
+        this.reload()
+        this.$message.success('销售成功')
+      })
     },
 
     // /**

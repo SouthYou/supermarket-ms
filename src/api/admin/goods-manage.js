@@ -23,3 +23,11 @@ export function modifyGoods(data) {
     data
   })
 }
+
+export function sellGoods(data) {
+  return request({
+    url: '/goods/sell',
+    method: 'post',
+    data
+  })
+}
