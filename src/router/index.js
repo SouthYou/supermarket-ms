@@ -83,12 +83,12 @@ export const adminRoutes = [
   },
   
   {
-    path: '/order',
+    path: '/sales',
     component: Layout,
     children: [{
       path: '',
-      name: 'Order',
-      component: () => import('@/views/admin/order-manage/index'),
+      name: 'Sales',
+      component: () => import('@/views/admin/sales-record/index'),
       meta: { title: '销售记录（开发）', icon: 'el-icon-edit-outline' }
     }]
   },

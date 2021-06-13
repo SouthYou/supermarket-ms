@@ -222,10 +222,11 @@ export default {
       this.$set(this.showData[index], 'isEditPropertyShow', false)
       const goodsId = this.showData[index].goodsId
       const goodsPrice = this.showData[index].goodsPrice
-      const importGoodsSum = this.showData[index].importGoodsSum
-      const params = { goodsId, goodsPrice, importGoodsSum }
+      const stock = this.showData[index].stock
+      const params = { goodsId, goodsPrice, stock }
       api.modifyGoods(params).then(res => {
         const { data } = res
+        this.reload()
         this.$message.success('更新成功')
       })
     },
