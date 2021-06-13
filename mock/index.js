@@ -4,6 +4,7 @@ const { param2Obj } = require('./utils')
 const user = require('./common/user')
 const goods_manage = require('./admin/goods-manage')
 const stock_record = require('./admin/stock-recoed')
+const finance_manage = require('./admin/finance-manage')
 
 const news = require('./demo/news')
 const exam = require('./demo/exam')
@@ -20,6 +21,7 @@ const mocks = [
   ...user,
   ...goods_manage,
   ...stock_record,
+  ...finance_manage,
 
   ...news,
   ...exam,
