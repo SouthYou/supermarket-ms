@@ -11,6 +11,7 @@
     <div class="table-container">
       <el-table :data="showData" border style="width: 100%">
         <el-table-column prop="recordId" label="记录编号"></el-table-column>
+        <el-table-column prop="goodsId" label="商品编号"></el-table-column>
         <el-table-column prop="goodsName" label="商品名称"></el-table-column>
         <el-table-column prop="goodsType" label="商品类型"></el-table-column>
         <el-table-column prop="goodsPrice" label="商品销售价"></el-table-column>
@@ -38,17 +39,11 @@ export default {
   // inject: ['reload'],
   data() {
     return {
-      // 退款dialog-----------------------------------------------------------
-      refundFormDialogVisible: false,
-      refundForm: {
-        goodsId: '',
-        goodsNum: 1
-      },
       // 销售记录列表 (表格分页)------------------------------------------------
       tableData: [],
       showData: [],
       pageNo: 1,
-      pageSize: 3,
+      pageSize: 10,
       total: 0
     }
   },
@@ -65,7 +60,13 @@ export default {
   },
 
   methods: {
-    
+    /**
+     * @method 页码改变
+     */
+    pageNoChange(pageNo) {
+      this.pageNo = pageNo
+      this.showData = this.tableData[pageNo - 1]
+    }
   }
 }
 </script>

@@ -48,7 +48,6 @@
               <el-button type="primary" plain size="small" @click="saveProperty(scope.row,scope.$index)">保存</el-button>
               <el-button size="small" @click="cancelProperty(scope.row,scope.$index)">取消</el-button>
             </div>
-            <!-- <el-button type="danger" size="small" @click="handleNewsRemove(scope.row.newsId)">删除</el-button> -->
           </template>
         </el-table-column>
       </el-table>
@@ -418,28 +417,6 @@ export default {
         this.$message.success('退款成功')
       })
     },
-
-    // /**
-    //  * @method 删除新闻
-    //  * @param newsId
-    //  */
-    // handleNewsRemove(newsId) {
-    //   console.log(newsId)
-    //   this.$confirm('此操作将删除该新闻, 是否继续?', '提示', {
-    //     confirmButtonText: '确定',
-    //     cancelButtonText: '取消',
-    //     type: 'warning'
-    //   }).then(() => {
-    //     const params = { newsId }
-    //     oldApi.delNews(params).then(res => {
-    //       const { data } = res
-    //       this.reload()
-    //       this.$message.success('删除成功')
-    //     })
-    //   }).catch(() => {
-    //     this.$message.info('取消删除')
-    //   })
-    // },
 
     /**
      * @method 页码改变

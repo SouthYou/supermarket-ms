@@ -7,11 +7,3 @@ export function getSalesRecord(params) {
     params
   })
 }
-
-export function refund(data) {
-  return request({
-    url: '/sales/refund',
-    method: 'post',
-    data
-  })
-}

@@ -39,3 +39,11 @@ export function sellGoods(data) {
     data
   })
 }
+
+export function refund(data) {
+  return request({
+    url: '/goods/refund',
+    method: 'post',
+    data
+  })
+}
