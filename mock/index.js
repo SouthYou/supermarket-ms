@@ -3,6 +3,7 @@ const { param2Obj } = require('./utils')
 
 const user = require('./common/user')
 const goods_manage = require('./admin/goods-manage')
+const stock_record = require('./admin/stock-recoed')
 
 const news = require('./demo/news')
 const exam = require('./demo/exam')
@@ -18,6 +19,7 @@ const arrange = require('./demo/arrange')
 const mocks = [
   ...user,
   ...goods_manage,
+  ...stock_record,
 
   ...news,
   ...exam,
