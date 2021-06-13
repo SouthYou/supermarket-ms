@@ -11,21 +11,21 @@
           inactive-color="#13ce66"
           active-color="#409EFF"
           inactive-text="按天查询"
-          active-text="按月查询">
+          active-text="按月查询"
+          @change="switchStatusChanged">
         </el-switch>
       </el-card>
     </div>
 
     <!-- 数据表格 -->
     <div class="table-container">
-      <el-table :data="showData" border style="width: 100%" cell-style="text-align: center;" header-cell-style="text-align: center;">
-        <el-table-column prop="recordId" label="记录编号"></el-table-column>
-        <el-table-column prop="importId" label="进货编号"></el-table-column>
-        <el-table-column prop="goodsId" label="商品编号"></el-table-column>
+      <el-table :data="showData" border style="width: 100%" :cell-style="cell_center" :header-cell-style="cell_center">
+        <el-table-column prop="goodsBaseId" label="商品基础编号"></el-table-column>
         <el-table-column prop="goodsName" label="商品名称"></el-table-column>
-        <el-table-column prop="effectNum" label="变更数量"></el-table-column>
-        <el-table-column prop="effectType" label="变更类型"></el-table-column>
-        <el-table-column prop="effectTime" label="变更时间"></el-table-column>
+        <el-table-column prop="goodsType" label="商品类型"></el-table-column>
+        <el-table-column prop="totalNum" label="总销售量"></el-table-column>
+        <el-table-column prop="totalPrice" label="总销售额"></el-table-column>
+        <el-table-column prop="totalProfits" label="总利润"></el-table-column>
       </el-table>
     </div>
 
@@ -42,12 +42,15 @@
 </template>
 
 <script>
-// import * as api from '@/api/edu/enroll'
+import * as api from '@/api/admin/finance-manage'
 
 export default {
   // inject: ['reload'],
   data() {
     return {
+      cell_center: {
+        "text-align": "center"
+      },
       switch_day: false,
       tableData: [],
       showData: [],
@@ -57,12 +60,35 @@ export default {
     }
   },
 
-  mounted() {
-    
+  created() {
+    const pageSize = this.pageSize
+    const params = { pageSize, type: "day" }
+    api.getFinanceSummary(params).then(res => {
+      const { data } = res
+      this.total = data.total
+      this.tableData = data.tableData
+      this.showData = this.tableData[0]
+    })
   },
 
   methods: {
-    
+    switchStatusChanged(status) {
+      const queryType = status ? "month":"day"
+      const params = {
+        type: queryType,
+        pageSize: this.pageSize
+      }
+      api.getFinanceSummary(params).then(res => {
+        const { data } = res
+        this.total = data.total
+        this.tableData = data.tableData
+        this.showData = this.tableData[0]
+      })
+    },
+    pageNoChange(pageNo) {
+      this.pageNo = pageNo
+      this.showData = this.tableData[pageNo - 1]
+    }
   }
 }
 </script>
