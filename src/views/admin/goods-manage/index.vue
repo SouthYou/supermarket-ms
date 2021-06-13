@@ -7,6 +7,7 @@
         <div class="btn-container">
           <el-button type="success" size="small" @click="showImportFormDialog()">进货</el-button>
           <el-button type="success" size="small" @click="showAddFormDialog()">添加新商品</el-button>
+          <el-button type="danger" size="small" @click="showRefundFormDialog()">退款</el-button>
         </div>
       </el-card>
     </div>
@@ -147,6 +148,23 @@
         <el-button type="primary" @click="submitSellFormDialog()">提 交</el-button>
       </span>
     </el-dialog>
+
+    <!-- 退款dialog -->
+    <el-dialog title="退款" :visible.sync="refundFormDialogVisible" width="550px" :before-close="closeRefundFormDialog">
+      <el-form :model="refundForm" label-position="left" label-width="100px" ref="refundForm">
+        <el-form-item label="商品编号" prop="goodsId">
+          <el-input v-model="refundForm.goodsName" style="width:350px"></el-input>
+        </el-form-item>
+        <el-form-item label="退款数量" prop="goodsNum">
+          <el-input-number v-model="refundForm.goodsNum" :min="1"></el-input-number>
+        </el-form-item>
+      </el-form>
+
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="closeRefundFormDialog()">取 消</el-button>
+        <el-button type="primary" @click="submitRefundFormDialog()">提 交</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -173,16 +191,22 @@ export default {
           return time.getTime() > Date.now()
         }
       },
-      // 表单dialog (添加新商品)--------------------------------------------
+      // 添加新商品dialog -----------------------------------------------
       addFormDialogVisible: false,
       addForm: {
         goodsName: '',
         goodsType: ''
       },
-      // 表单dialog (销售商品)--------------------------------------------
+      // 销售商品dialog --------------------------------------------------
       sellFormDialogVisible: false,
       sellForm: {
         goodsName: '',
+        goodsNum: 1
+      },
+      // 退款dialog--------------------------------------------------------
+      refundFormDialogVisible: false,
+      refundForm: {
+        goodsId: '',
         goodsNum: 1
       },
       // 商品列表 (表格分页)------------------------------------------------
@@ -218,12 +242,20 @@ export default {
      * @method 保存对商品属性的更改
      */
     saveProperty(row, index) {
-      sessionStorage.removeItem('oldPropertyValue')
-      this.$set(this.showData[index], 'isEditPropertyShow', false)
       const goodsId = this.showData[index].goodsId
       const goodsPrice = this.showData[index].goodsPrice
       const stock = this.showData[index].stock
       const params = { goodsId, goodsPrice, stock }
+      if (goodsPrice <= 0) {
+        this.$message.error('销售价应当大于0')
+        return false
+      }
+      if (stock < 0) {
+        this.$message.error('库存不能小于0')
+        return false
+      }
+      sessionStorage.removeItem('oldPropertyValue')
+      this.$set(this.showData[index], 'isEditPropertyShow', false)
       api.modifyGoods(params).then(res => {
         const { data } = res
         this.reload()
@@ -239,7 +271,7 @@ export default {
       if (sessionStorage.getItem('oldPropertyValue') !== 'null') {
         let oldPropertyValue_json = JSON.parse(oldPropertyValue)
         this.$set(this.showData[index], 'goodsPrice', oldPropertyValue_json.goodsPrice)
-        this.$set(this.showData[index], 'importGoodsSum', oldPropertyValue_json.importGoodsSum)
+        this.$set(this.showData[index], 'stock', oldPropertyValue_json.stock)
       } else {
         console.error('sessionStorage未正常设置')
       }
@@ -340,6 +372,7 @@ export default {
     /**
      * @method 提交销售商品dialog内的表单信息
      */
+    // TODO 销售价和销售数量为负时
     submitSellFormDialog() {
       const goodsId = sessionStorage.getItem("selectedGoodsId")
       const goodsNum = this.sellForm.goodsNum
@@ -352,6 +385,37 @@ export default {
         this.closeSellFormDialog()
         this.reload()
         this.$message.success('销售成功')
+      })
+    },
+
+    /**
+     * @method 弹出退款dialog
+     */
+    showRefundFormDialog() {
+      this.refundFormDialogVisible = true
+    },
+
+    /**
+     * @method 关闭退款dialog
+     */
+    closeRefundFormDialog() {
+      this.refundFormDialogVisible = false
+    },
+
+    /**
+     * @method 提交退款dialog内的表单信息
+     */
+    submitRefundFormDialog() {
+      const name = this.refundForm.goodsId
+      const type = this.refundForm.goodsNum
+      const data = { name, type }
+      api.refund(data).then(res => {
+        const { data } = res
+        for (const key in this.refundForm) {
+          this.refundForm[key] = ''
+        }
+        this.closeRefundFormDialog()
+        this.$message.success('退款成功')
       })
     },
 

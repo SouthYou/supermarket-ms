@@ -4,7 +4,6 @@
     <div class="tickets-container">
       <el-card shadow="never">
         <i class="el-icon-tickets"></i> 销售记录
-        <el-button class="btn-refund" type="danger" size="small" @click="showRefundFormDialog()">退款</el-button>
       </el-card>
     </div>
 
@@ -19,23 +18,6 @@
         <el-table-column prop="time" label="销售时间"></el-table-column>
       </el-table>
     </div>
-
-    <!-- 退款dialog -->
-    <el-dialog title="销售商品" :visible.sync="refundFormDialogVisible" width="550px" :before-close="closeRefundFormDialog">
-      <el-form :model="refundForm" label-position="left" label-width="100px" ref="refundForm">
-        <el-form-item label="商品编号" prop="goodsId">
-          <el-input v-model="refundForm.goodsName" style="width:350px"></el-input>
-        </el-form-item>
-        <el-form-item label="退款数量" prop="goodsNum">
-          <el-input-number v-model="refundForm.goodsNum" :min="1"></el-input-number>
-        </el-form-item>
-      </el-form>
-
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="closeRefundFormDialog()">取 消</el-button>
-        <el-button type="primary" @click="submitRefundFormDialog()">提 交</el-button>
-      </span>
-    </el-dialog>
 
     <!-- 数据分页 -->
     <div class="pagination">
@@ -83,36 +65,7 @@ export default {
   },
 
   methods: {
-    /**
-     * @method 弹出退款dialog
-     */
-    showRefundFormDialog() {
-      this.refundFormDialogVisible = true
-    },
-
-    /**
-     * @method 关闭退款dialog
-     */
-    closeRefundFormDialog() {
-      this.refundFormDialogVisible = false
-    },
-
-    /**
-     * @method 提交退款dialog内的表单信息
-     */
-    submitRefundFormDialog() {
-      const name = this.refundForm.goodsId
-      const type = this.refundForm.goodsNum
-      const data = { name, type }
-      api.refund(data).then(res => {
-        const { data } = res
-        for (const key in this.refundForm) {
-          this.refundForm[key] = ''
-        }
-        this.closeRefundFormDialog()
-        this.$message.success('退款成功')
-      })
-    },
+    
   }
 }
 </script>

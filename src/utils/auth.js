@@ -1,4 +1,5 @@
 import Cookies from 'js-cookie'
+import { logout } from '@/api/user'
 
 const TokenKey = 'token'
 
@@ -11,5 +12,6 @@ export function setToken(token) {
 }
 
 export function removeToken() {
+  logout()
   return Cookies.remove(TokenKey)
 }
