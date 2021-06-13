@@ -4,14 +4,17 @@
     <div class="operate-container">
       <el-card shadow="never">
         <i class="el-icon-tickets"></i> 商品列表
-        <el-button class="btn-sell" type="success" size="small" @click="showAddFormDialog()">添加</el-button>
+        <div class="btn-container">
+          <el-button type="success" size="small" @click="showImportFormDialog()">进货</el-button>
+          <el-button type="success" size="small" @click="showAddFormDialog()">添加新商品</el-button>
+        </div>
       </el-card>
     </div>
 
     <!-- 商品列表 -->
     <div class="table-container">
       <el-table :data="showData" border style="width: 100%">
-        <el-table-column prop="goodsId" label="商品编号"></el-table-column>
+        <el-table-column prop="goodsId" label="商品编号" width="150"></el-table-column>
         <el-table-column prop="goodsName" label="商品名称"></el-table-column>
         <el-table-column prop="goodsType" label="商品类型"></el-table-column>
         <el-table-column prop="goodsCost" label="商品进货价"></el-table-column>
@@ -32,7 +35,7 @@
           </template>
         </el-table-column>
         <el-table-column prop="productionDate" label="生产日期"></el-table-column>
-        <el-table-column prop="duration" label="保质期"></el-table-column>
+        <el-table-column prop="duration" label="保质期（天）"></el-table-column>
         <el-table-column prop="expirationDate" label="过期时间"></el-table-column>
         <el-table-column label="操作" width="150">
           <template slot-scope="scope">
@@ -60,42 +63,65 @@
       </el-pagination>
     </div>
 
-    <!-- 添加商品dialog -->
-    <el-dialog title="添加商品" :visible.sync="addFormDialogVisible" width="550px" :before-close="closeAddFormDialog" style="margin-top: -10vh;">
-      <el-form :model="addForm" label-position="left" label-width="100px" ref="addForm">
+    <!-- 进货dialog -->
+    <el-dialog title="进货" :visible.sync="importFormDialogVisible" width="550px" :before-close="closeImportFormDialog" style="margin-top: -10vh;">
+      <el-form :model="importForm" label-position="left" label-width="100px" ref="importForm">
+        <el-form-item label="商品名称" prop="goodsName">
+          <el-input v-model="importForm.goodsName"></el-input>
+        </el-form-item>
+
+        <el-form-item label="商品类型" prop="goodsType">
+          <el-select v-model="importForm.goodsType" placeholder="请选择商品类型">
+            <el-option label="食品" value="食品"></el-option>
+            <el-option label="日用品" value="日用品"></el-option>
+          </el-select>
+        </el-form-item>
+
+        <el-form-item label="商品进货价" prop="goodsCost">
+          <el-input v-model="importForm.goodsCost" style="width:100px"></el-input>&nbsp;&nbsp;元
+        </el-form-item>
+
+        <el-form-item label="商品销售价" prop="goodsPrice">
+          <el-input v-model="importForm.goodsPrice" style="width:100px"></el-input>&nbsp;&nbsp;元
+        </el-form-item>
+
+        <el-form-item label="进货数量" prop="importGoodsSum">
+          <el-input v-model="importForm.importGoodsSum" style="width:200px"></el-input>
+        </el-form-item>
+
+        <el-form-item label="生产日期" prop="productionDate">
+          <el-date-picker
+            v-model="importForm.productionDate"
+            type="date"
+            placeholder="选择日期"
+            value-format="yyyy-MM-dd"
+            :picker-options="pickerOptions">
+          </el-date-picker>
+        </el-form-item>
+
+        <el-form-item label="保质期" prop="duration">
+          <el-input v-model="importForm.duration" style="width:100px"></el-input>&nbsp;&nbsp;个月
+        </el-form-item>
+      </el-form>
+
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="closeImportFormDialog()">取 消</el-button>
+        <el-button type="primary" @click="submitImportFormDialog()">提 交</el-button>
+      </span>
+    </el-dialog>
+
+    <!-- 添加新商品dialog -->
+    <el-dialog title="添加新商品" :visible.sync="addFormDialogVisible" width="550px" :before-close="closeAddFormDialog">
+      <el-form :model="addForm" label-position="left" label-width="100px" ref="sellForm">
         <el-form-item label="商品名称" prop="goodsName">
           <el-input v-model="addForm.goodsName"></el-input>
         </el-form-item>
 
         <el-form-item label="商品类型" prop="goodsType">
           <el-select v-model="addForm.goodsType" placeholder="请选择商品类型">
-            <el-option label="食品" value="a"></el-option>
-            <el-option label="日用品" value="b"></el-option>
+            <el-option label="食品" value="食品"></el-option>
+            <el-option label="日用品" value="日用品"></el-option>
           </el-select>
-        </el-form-item>
-
-        <el-form-item label="商品进货价" prop="goodsCost">
-          <el-input v-model="addForm.goodsCost" style="width:100px"></el-input>&nbsp;&nbsp;元
-        </el-form-item>
-
-        <el-form-item label="商品销售价" prop="goodsPrice">
-          <el-input v-model="addForm.goodsPrice" style="width:100px"></el-input>&nbsp;&nbsp;元
-        </el-form-item>
-
-        <el-form-item label="库存" prop="stock">
-          <el-input v-model="addForm.stock" style="width:200px"></el-input>
-        </el-form-item>
-
-        <el-form-item label="生产日期" prop="productionDate">
-          <el-date-picker
-            v-model="addForm.productionDate"
-            type="date"
-            placeholder="选择日期">
-          </el-date-picker>
-        </el-form-item>
-
-        <el-form-item label="保质期" prop="duration">
-          <el-input v-model="addForm.duration" style="width:100px"></el-input>&nbsp;&nbsp;个月
         </el-form-item>
       </el-form>
 
@@ -131,16 +157,27 @@ export default {
   inject: ['reload'],
   data() {
     return {
-      // 表单dialog (添加商品)--------------------------------------------
-      addFormDialogVisible: false,
-      addForm: {
+      // 表单dialog (进货)--------------------------------------------
+      importFormDialogVisible: false,
+      importForm: {
         goodsName: '',
         goodsType: '',
         goodsCost: '',
         goodsPrice: '',
-        stock: '',
-        productDate: '',
+        importGoodsSum: '',
+        productionDate: '',
         duration: ''
+      },
+      pickerOptions: {
+        disabledDate(time) {
+          return time.getTime() > Date.now()
+        }
+      },
+      // 表单dialog (添加新商品)--------------------------------------------
+      addFormDialogVisible: false,
+      addForm: {
+        goodsName: '',
+        goodsType: ''
       },
       // 表单dialog (销售商品)--------------------------------------------
       sellFormDialogVisible: false,
@@ -158,9 +195,6 @@ export default {
   },
 
   created() {
-    // TODO 生产日期不能晚于当天
-    // TODO 保质期传给后端之前乘30
-    // TODO 实现/goods/import和/goods/base/add接口
     const pageSize = this.pageSize
     const params = { pageSize }
     api.getGoods(params).then(res => {
@@ -188,8 +222,8 @@ export default {
       this.$set(this.showData[index], 'isEditPropertyShow', false)
       const goodsId = this.showData[index].goodsId
       const goodsPrice = this.showData[index].goodsPrice
-      const stock = this.showData[index].stock
-      const params = { goodsId, goodsPrice, stock }
+      const importGoodsSum = this.showData[index].importGoodsSum
+      const params = { goodsId, goodsPrice, importGoodsSum }
       api.modifyGoods(params).then(res => {
         const { data } = res
         this.$message.success('更新成功')
@@ -204,7 +238,7 @@ export default {
       if (sessionStorage.getItem('oldPropertyValue') !== 'null') {
         let oldPropertyValue_json = JSON.parse(oldPropertyValue)
         this.$set(this.showData[index], 'goodsPrice', oldPropertyValue_json.goodsPrice)
-        this.$set(this.showData[index], 'stock', oldPropertyValue_json.stock)
+        this.$set(this.showData[index], 'importGoodsSum', oldPropertyValue_json.importGoodsSum)
       } else {
         console.error('sessionStorage未正常设置')
       }
@@ -213,24 +247,63 @@ export default {
     },
 
     /**
-     * @method 弹出添加商品dialog
+     * @method 弹出进货dialog
+     */
+    showImportFormDialog() {
+      this.importFormDialogVisible = true
+    },
+
+    /**
+     * @method 关闭进货dialog
+     */
+    closeImportFormDialog() {
+      this.importFormDialogVisible = false
+    },
+
+    /**
+     * @method 提交进货dialog内的表单信息
+     */
+    submitImportFormDialog() {
+      const goodsName = this.importForm.goodsName
+      const goodsType = this.importForm.goodsType
+      const goodsCost = parseInt(this.importForm.goodsCost)
+      const goodsPrice = parseInt(this.importForm.goodsPrice)
+      const importGoodsSum = parseInt(this.importForm.importGoodsSum)
+      const productionDate = this.importForm.productionDate
+      const duration = parseInt(this.importForm.duration) * 30
+      const data = { goodsName, goodsType, goodsCost, goodsPrice, importGoodsSum, productionDate, duration }
+      api.importGoods(data).then(res => {
+        const { data } = res
+        for (const key in this.importForm) {
+          this.importForm[key] = ''
+        }
+        this.closeImportFormDialog()
+        this.reload()
+        this.$message.success('进货成功')
+      })
+    },
+
+    /**
+     * @method 弹出添加新商品dialog
      */
     showAddFormDialog() {
       this.addFormDialogVisible = true
     },
 
     /**
-     * @method 关闭添加商品dialog
+     * @method 关闭添加新商品dialog
      */
     closeAddFormDialog() {
       this.addFormDialogVisible = false
     },
 
     /**
-     * @method 提交dialog内的表单信息
+     * @method 提交添加新商品dialog内的表单信息
      */
     submitAddFormDialog() {
-      const data = this.addForm
+      const name = this.addForm.goodsName
+      const type = this.addForm.goodsType
+      const data = { name, type }
       api.addGoods(data).then(res => {
         const { data } = res
         for (const key in this.addForm) {
@@ -316,7 +389,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.operate-container .btn-sell {
+.operate-container .btn-container {
   float: right;
 }
 

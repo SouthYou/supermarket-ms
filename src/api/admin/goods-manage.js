@@ -8,9 +8,17 @@ export function getGoods(params) {
   })
 }
 
+export function importGoods(data) {
+  return request({
+    url: '/goods/import',
+    method: 'post',
+    data
+  })
+}
+
 export function addGoods(data) {
   return request({
-    url: '/goods/add',
+    url: '/goods/base/add',
     method: 'post',
     data
   })
