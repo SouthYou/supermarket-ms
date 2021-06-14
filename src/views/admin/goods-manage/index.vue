@@ -151,8 +151,11 @@
     <!-- 退款dialog -->
     <el-dialog title="退款" :visible.sync="refundFormDialogVisible" width="550px" :before-close="closeRefundFormDialog">
       <el-form :model="refundForm" label-position="left" label-width="100px" ref="refundForm">
+        <el-form-item label="记录编号" prop="recordId">
+          <el-input v-model="refundForm.recordId" style="width:350px"></el-input>
+        </el-form-item>
         <el-form-item label="商品编号" prop="goodsId">
-          <el-input v-model="refundForm.goodsName" style="width:350px"></el-input>
+          <el-input v-model="refundForm.goodsId" style="width:350px"></el-input>
         </el-form-item>
         <el-form-item label="退款数量" prop="goodsNum">
           <el-input-number v-model="refundForm.goodsNum" :min="1"></el-input-number>
@@ -205,6 +208,7 @@ export default {
       // 退款dialog--------------------------------------------------------
       refundFormDialogVisible: false,
       refundForm: {
+        recordId: '',
         goodsId: '',
         goodsNum: 1
       },
@@ -242,15 +246,31 @@ export default {
      */
     saveProperty(row, index) {
       const goodsId = this.showData[index].goodsId
-      const goodsPrice = this.showData[index].goodsPrice
-      const stock = this.showData[index].stock
+      const goodsPrice = this.showData[index].goodsPrice.trim()
+      const stock = this.showData[index].stock.trim()
       const params = { goodsId, goodsPrice, stock }
+      if (!/^\d+$/.test(goodsPrice)) {
+        this.$message.error('销售价只能输入数字')
+        return false
+      }
       if (goodsPrice <= 0) {
-        this.$message.error('销售价应当大于0')
+        this.$message.error('销售价不能小于等于0')
+        return false
+      }
+      if (goodsPrice > 10000) {
+        this.$message.error('销售价不能大于10000')
+        return false
+      }
+      if (!/^\d+$/.test(stock)) {
+        this.$message.error('库存只能输入数字')
         return false
       }
       if (stock < 0) {
         this.$message.error('库存不能小于0')
+        return false
+      }
+      if (stock > 10000) {
+        this.$message.error('库存不能大于10000')
         return false
       }
       sessionStorage.removeItem('oldPropertyValue')
@@ -296,23 +316,68 @@ export default {
      * @method 提交进货dialog内的表单信息
      */
     submitImportFormDialog() {
-      const goodsName = this.importForm.goodsName
-      const goodsType = this.importForm.goodsType
-      const goodsCost = parseInt(this.importForm.goodsCost)
-      const goodsPrice = parseInt(this.importForm.goodsPrice)
-      const importGoodsSum = parseInt(this.importForm.importGoodsSum)
-      const productionDate = this.importForm.productionDate
-      const duration = parseInt(this.importForm.duration) * 30
-      const data = { goodsName, goodsType, goodsCost, goodsPrice, importGoodsSum, productionDate, duration }
-      api.importGoods(data).then(res => {
-        const { data } = res
-        for (const key in this.importForm) {
-          this.importForm[key] = ''
-        }
-        this.closeImportFormDialog()
-        this.reload()
-        this.$message.success('进货成功')
-      })
+      const goodsName = this.importForm.goodsName.trim()
+      const goodsType = this.importForm.goodsType.trim()
+      const goodsCost = this.importForm.goodsCost.trim()
+      const goodsPrice = this.importForm.goodsPrice.trim()
+      const importGoodsSum = this.importForm.importGoodsSum.trim()
+      const productionDate = this.importForm.productionDate.trim()
+      const duration = this.importForm.duration.trim()
+      if (goodsName.length === 0 || goodsType.length === 0 || goodsCost.length === 0 || goodsPrice.length === 0 || importGoodsSum.length === 0 || productionDate.length === 0 || duration.length === 0) {
+        this.$message.error('表单信息未填写完整')
+        return false
+      }
+      if (!/^\d+\.?\d*\d$/.test(goodsCost)) {
+        this.$message.error('商品进货价输入非法')
+        return false
+      }
+      if (!/^\d+\.?\d*\d$/.test(goodsPrice)) {
+        this.$message.error('商品销售价输入非法')
+        return false
+      }
+      if (!/^\d+$/.test(importGoodsSum)) {
+        this.$message.error('进货数量输入非法')
+        return false
+      }
+      if (goodsCost <= 0) {
+        this.$message.error('商品进货价不能小于等于0')
+        return false
+      }
+      if (goodsPrice <= 0) {
+        this.$message.error('商品售价不能小于等于0')
+        return false
+      }
+      if (goodsPrice < goodsCost) {
+        this.$message.error('商品售价不能低于商品成本')
+        return false
+      }
+      if (importGoodsSum <= 0 || importGoodsSum > 10000) {
+        this.$message.error('进货数量不能小于等于0且不能大于10000')
+        return false
+      }
+      if (duration <= 0 || duration > 60) {
+        this.$message.error('保质期不能小于等于0且不能大于5年')
+        return false
+      }
+      const data = {
+        goodsName,
+        goodsType,
+        goodsCost: parseFloat(goodsCost),
+        goodsPrice: parseFloat(goodsPrice),
+        importGoodsSum: parseInt(importGoodsSum),
+        productionDate,
+        duration: parseInt(duration) * 30
+      }
+      console.log(data)
+      // api.importGoods(data).then(res => {
+      //   const { data } = res
+      //   for (const key in this.importForm) {
+      //     this.importForm[key] = ''
+      //   }
+      //   this.closeImportFormDialog()
+      //   this.reload()
+      //   this.$message.success('进货成功')
+      // })
     },
 
     /**
@@ -333,8 +398,24 @@ export default {
      * @method 提交添加新商品dialog内的表单信息
      */
     submitAddFormDialog() {
-      const name = this.addForm.goodsName
-      const type = this.addForm.goodsType
+      const name = this.addForm.goodsName.trim()
+      const type = this.addForm.goodsType.trim()
+      if (name.length === 0) {
+        this.$message.error('商品名称不能为空')
+        return false
+      }
+      if (/^\d+$/.test(name)) {
+        this.$message.error('商品名称不能为全数字')
+        return false
+      }
+      if (name.length > 20) {
+        this.$message.error('商品名称不能超过20个字符')
+        return false
+      }
+      if (type.length === 0) {
+        this.$message.error('商品类型不能为空')
+        return false
+      }
       const data = { name, type }
       api.addGoods(data).then(res => {
         const { data } = res
@@ -371,7 +452,6 @@ export default {
     /**
      * @method 提交销售商品dialog内的表单信息
      */
-    // TODO 销售价和销售数量为负时
     submitSellFormDialog() {
       const goodsId = sessionStorage.getItem("selectedGoodsId")
       const goodsNum = this.sellForm.goodsNum
@@ -405,9 +485,7 @@ export default {
      * @method 提交退款dialog内的表单信息
      */
     submitRefundFormDialog() {
-      const name = this.refundForm.goodsId
-      const type = this.refundForm.goodsNum
-      const data = { name, type }
+      const data = this.refundForm
       api.refund(data).then(res => {
         const { data } = res
         for (const key in this.refundForm) {
