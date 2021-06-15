@@ -216,7 +216,7 @@ export default {
       tableData: [],
       showData: [],
       pageNo: 1,
-      pageSize: 3,
+      pageSize: 10,
       total: 0
     }
   },
@@ -246,11 +246,16 @@ export default {
      */
     saveProperty(row, index) {
       const goodsId = this.showData[index].goodsId
-      const goodsPrice = this.showData[index].goodsPrice.trim()
-      const stock = this.showData[index].stock.trim()
-      const params = { goodsId, goodsPrice, stock }
-      if (!/^\d+$/.test(goodsPrice)) {
-        this.$message.error('销售价只能输入数字')
+      let goodsPrice = this.showData[index].goodsPrice
+      let stock = this.showData[index].stock
+      if (typeof(goodsPrice) === 'string') {
+        goodsPrice = goodsPrice.trim()
+      }
+      if (typeof(stock) === 'string') {
+        stock = stock.trim()
+      }
+      if (!/^\d+(\.\d+)?$/.test(goodsPrice)) {
+        this.$message.error('销售价输入非法')
         return false
       }
       if (goodsPrice <= 0) {
@@ -265,8 +270,8 @@ export default {
         this.$message.error('库存只能输入数字')
         return false
       }
-      if (stock < 0) {
-        this.$message.error('库存不能小于0')
+      if (stock <= 0) {
+        this.$message.error('库存不能小于等于0')
         return false
       }
       if (stock > 10000) {
@@ -275,6 +280,8 @@ export default {
       }
       sessionStorage.removeItem('oldPropertyValue')
       this.$set(this.showData[index], 'isEditPropertyShow', false)
+      const params = { goodsId, goodsPrice, stock }
+      console.log(params)
       api.modifyGoods(params).then(res => {
         const { data } = res
         this.reload()
@@ -327,16 +334,20 @@ export default {
         this.$message.error('表单信息未填写完整')
         return false
       }
-      if (!/^\d+\.?\d*\d$/.test(goodsCost)) {
+      if (!/^\d+(\.\d+)?$/.test(goodsCost)) {
         this.$message.error('商品进货价输入非法')
         return false
       }
-      if (!/^\d+\.?\d*\d$/.test(goodsPrice)) {
+      if (!/^\d+(\.\d+)?$/.test(goodsPrice)) {
         this.$message.error('商品销售价输入非法')
         return false
       }
       if (!/^\d+$/.test(importGoodsSum)) {
         this.$message.error('进货数量输入非法')
+        return false
+      }
+      if (!/^\d+$/.test(duration)) {
+        this.$message.error('保质期输入非法')
         return false
       }
       if (goodsCost <= 0) {
@@ -362,22 +373,21 @@ export default {
       const data = {
         goodsName,
         goodsType,
-        goodsCost: parseFloat(goodsCost),
-        goodsPrice: parseFloat(goodsPrice),
-        importGoodsSum: parseInt(importGoodsSum),
+        goodsCost,
+        goodsPrice,
+        importGoodsSum,
         productionDate,
-        duration: parseInt(duration) * 30
+        duration
       }
-      console.log(data)
-      // api.importGoods(data).then(res => {
-      //   const { data } = res
-      //   for (const key in this.importForm) {
-      //     this.importForm[key] = ''
-      //   }
-      //   this.closeImportFormDialog()
-      //   this.reload()
-      //   this.$message.success('进货成功')
-      // })
+      api.importGoods(data).then(res => {
+        const { data } = res
+        for (const key in this.importForm) {
+          this.importForm[key] = ''
+        }
+        this.closeImportFormDialog()
+        this.reload()
+        this.$message.success('进货成功')
+      })
     },
 
     /**
@@ -405,11 +415,15 @@ export default {
         return false
       }
       if (/^\d+$/.test(name)) {
-        this.$message.error('商品名称不能为全数字')
+        this.$message.error('商品名称不能全为数字')
         return false
       }
-      if (name.length > 20) {
-        this.$message.error('商品名称不能超过20个字符')
+      if (/^[+\-*/]*$/.test(name)) {
+        this.$message.error('商品名称不能全为特殊字符')
+        return false
+      }
+      if (name.length > 100) {
+        this.$message.error('商品名称不能超过100个字符')
         return false
       }
       if (type.length === 0) {

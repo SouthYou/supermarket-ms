@@ -6,33 +6,11 @@ const goods_manage = require('./admin/goods-manage')
 const stock_record = require('./admin/stock-recoed')
 const finance_manage = require('./admin/finance-manage')
 
-const news = require('./demo/news')
-const exam = require('./demo/exam')
-const status = require('./demo/status')
-const enroll = require('./demo/enroll')
-const apply = require('./demo/apply')
-const session = require('./demo/session')
-const site = require('./demo/site')
-const score = require('./demo/score')
-const invigilator = require('./demo/invigilator')
-const arrange = require('./demo/arrange')
-
 const mocks = [
   ...user,
   ...goods_manage,
   ...stock_record,
   ...finance_manage,
-
-  ...news,
-  ...exam,
-  ...status,
-  ...enroll,
-  ...apply,
-  ...session,
-  ...site,
-  ...score,
-  ...invigilator,
-  ...arrange
 ]
 
 // for front mock

@@ -67,7 +67,7 @@ export const adminRoutes = [
       path: '',
       name: 'Goods',
       component: () => import('@/views/admin/goods-manage/index'),
-      meta: { title: '商品管理（开发）', icon: 'el-icon-goods' }
+      meta: { title: '商品管理', icon: 'el-icon-goods' }
     }]
   },
 
@@ -78,7 +78,7 @@ export const adminRoutes = [
       path: '',
       name: 'Stock',
       component: () => import('@/views/admin/stock-manage/index'),
-      meta: { title: '库存管理（开发）', icon: 'el-icon-truck' }
+      meta: { title: '库存记录', icon: 'el-icon-truck' }
     }]
   },
   
@@ -89,7 +89,7 @@ export const adminRoutes = [
       path: '',
       name: 'Sales',
       component: () => import('@/views/admin/sales-record/index'),
-      meta: { title: '销售记录（开发）', icon: 'el-icon-edit-outline' }
+      meta: { title: '销售记录', icon: 'el-icon-edit-outline' }
     }]
   },
 
@@ -100,132 +100,132 @@ export const adminRoutes = [
       path: '',
       name: 'Finance',
       component: () => import('@/views/admin/finance-manage/index'),
-      meta: { title: '财务管理（开发）', icon: 'el-icon-money' }
+      meta: { title: '财务管理', icon: 'el-icon-money' }
     }]
   },
   ////////////////////////////////////////////////////////
   ///////////////////以下为历史项目遗留////////////////////
   ////////////////////////////////////////////////////////
-  {
-    path: '/news',
-    component: Layout,
-    children: [{
-      path: 'index',
-      name: 'News',
-      component: () => import('@/views/demo/news/index'),
-      meta: { title: '考试新闻管理', icon: 'el-icon-news' }
-    }]
-  },
+  // {
+  //   path: '/news',
+  //   component: Layout,
+  //   children: [{
+  //     path: 'index',
+  //     name: 'News',
+  //     component: () => import('@/views/demo/news/index'),
+  //     meta: { title: '考试新闻管理', icon: 'el-icon-news' }
+  //   }]
+  // },
 
-  {
-    path: '/exam',
-    component: Layout,
-    children: [{
-      path: 'index',
-      name: 'Exam',
-      component: () => import('@/views/demo/exam/index'),
-      meta: { title: '考试信息设置', icon: 'el-icon-setting' }
-    }]
-  },
+  // {
+  //   path: '/exam',
+  //   component: Layout,
+  //   children: [{
+  //     path: 'index',
+  //     name: 'Exam',
+  //     component: () => import('@/views/demo/exam/index'),
+  //     meta: { title: '考试信息设置', icon: 'el-icon-setting' }
+  //   }]
+  // },
 
-  {
-    path: '/log',
-    component: Layout,
-    children: [{
-      path: 'index',
-      name: 'Log',
-      component: () => import('@/views/demo/logging/index'),
-      meta: { title: '日志管理', icon: 'el-icon-notebook-2' }
-    }]
-  },
+  // {
+  //   path: '/log',
+  //   component: Layout,
+  //   children: [{
+  //     path: 'index',
+  //     name: 'Log',
+  //     component: () => import('@/views/demo/logging/index'),
+  //     meta: { title: '日志管理', icon: 'el-icon-notebook-2' }
+  //   }]
+  // },
 
-  {
-    path: '/site',
-    component: Layout,
-    children: [{
-      path: 'index',
-      name: 'Site',
-      component: () => import('@/views/demo/site/index'),
-      meta: { title: '考点管理', icon: 'el-icon-location-information' }
-    }]
-  },
+  // {
+  //   path: '/site',
+  //   component: Layout,
+  //   children: [{
+  //     path: 'index',
+  //     name: 'Site',
+  //     component: () => import('@/views/demo/site/index'),
+  //     meta: { title: '考点管理', icon: 'el-icon-location-information' }
+  //   }]
+  // },
 
-  {
-    path: '/session',
-    component: Layout,
-    children: [{
-      path: 'index',
-      name: 'Session',
-      component: () => import('@/views/demo/session/index'),
-      meta: { title: '场次管理', icon: 'el-icon-alarm-clock' }
-    }]
-  },
+  // {
+  //   path: '/session',
+  //   component: Layout,
+  //   children: [{
+  //     path: 'index',
+  //     name: 'Session',
+  //     component: () => import('@/views/demo/session/index'),
+  //     meta: { title: '场次管理', icon: 'el-icon-alarm-clock' }
+  //   }]
+  // },
 
-  {
-    path: '/invigilator',
-    component: Layout,
-    children: [{
-      path: 'index',
-      name: 'Invigilator',
-      component: () => import('@/views/demo/invigilator/index'),
-      meta: { title: '监考教师管理', icon: 'el-icon-user' }
-    }]
-  },
+  // {
+  //   path: '/invigilator',
+  //   component: Layout,
+  //   children: [{
+  //     path: 'index',
+  //     name: 'Invigilator',
+  //     component: () => import('@/views/demo/invigilator/index'),
+  //     meta: { title: '监考教师管理', icon: 'el-icon-user' }
+  //   }]
+  // },
 
-  {
-    path: '/arrange',
-    component: Layout,
-    children: [{
-      path: 'index',
-      name: 'Arrange',
-      component: () => import('@/views/demo/arrange/index'),
-      meta: { title: '考试安排管理', icon: 'el-icon-date' }
-    }]
-  },
+  // {
+  //   path: '/arrange',
+  //   component: Layout,
+  //   children: [{
+  //     path: 'index',
+  //     name: 'Arrange',
+  //     component: () => import('@/views/demo/arrange/index'),
+  //     meta: { title: '考试安排管理', icon: 'el-icon-date' }
+  //   }]
+  // },
 
-  {
-    path: '/score',
-    component: Layout,
-    children: [{
-      path: 'index',
-      name: 'Score',
-      component: () => import('@/views/demo/score/index'),
-      meta: { title: '成绩导入', icon: 'el-icon-upload2' }
-    }]
-  },
+  // {
+  //   path: '/score',
+  //   component: Layout,
+  //   children: [{
+  //     path: 'index',
+  //     name: 'Score',
+  //     component: () => import('@/views/demo/score/index'),
+  //     meta: { title: '成绩导入', icon: 'el-icon-upload2' }
+  //   }]
+  // },
 
-  {
-    path: '/status',
-    component: Layout,
-    children: [{
-      path: 'index',
-      name: 'Status',
-      component: () => import('@/views/demo/status/index'),
-      meta: { title: '考试状态管理', icon: 'el-icon-s-operation' }
-    }]
-  },
+  // {
+  //   path: '/status',
+  //   component: Layout,
+  //   children: [{
+  //     path: 'index',
+  //     name: 'Status',
+  //     component: () => import('@/views/demo/status/index'),
+  //     meta: { title: '考试状态管理', icon: 'el-icon-s-operation' }
+  //   }]
+  // },
 
-  {
-    path: '/enroll',
-    component: Layout,
-    children: [{
-      path: 'index',
-      name: 'Enroll',
-      component: () => import('@/views/demo/enroll/index'),
-      meta: { title: '报考信息管理', icon: 'el-icon-document' }
-    }]
-  },
+  // {
+  //   path: '/enroll',
+  //   component: Layout,
+  //   children: [{
+  //     path: 'index',
+  //     name: 'Enroll',
+  //     component: () => import('@/views/demo/enroll/index'),
+  //     meta: { title: '报考信息管理', icon: 'el-icon-document' }
+  //   }]
+  // },
 
-  {
-    path: '/apply',
-    component: Layout,
-    children: [{
-      path: 'index',
-      name: 'Apply',
-      component: () => import('@/views/demo/apply/index'),
-      meta: { title: '修改申请审核', icon: 'el-icon-coordinate' }
-    }]
-  },
+  // {
+  //   path: '/apply',
+  //   component: Layout,
+  //   children: [{
+  //     path: 'index',
+  //     name: 'Apply',
+  //     component: () => import('@/views/demo/apply/index'),
+  //     meta: { title: '修改申请审核', icon: 'el-icon-coordinate' }
+  //   }]
+  // },
 
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
